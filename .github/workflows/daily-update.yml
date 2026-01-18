@@ -1,0 +1,43 @@
+name: Daily Music Meta Update
+
+on:
+  schedule:
+    - cron: '0 16 * * *'  # UTC 16:00 = 北京时间 00:00
+  workflow_dispatch:  # 支持手动触发
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run calculator
+        run: python main.py
+
+      - name: Clone target repo
+        env:
+          GH_TOKEN: ${{ secrets.IMAGE_HOSTING_TOKEN }}
+        run: |
+          git clone https://x-access-token:${GH_TOKEN}@github.com/Exmeaning/Exmeaning-Image-hosting.git hosting
+
+      - name: Copy output and push
+        env:
+          GH_TOKEN: ${{ secrets.IMAGE_HOSTING_TOKEN }}
+        run: |
+          mkdir -p hosting/musicmeta
+          cp output/music_metas.json hosting/musicmeta/
+          cd hosting
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add musicmeta/
+          git diff --quiet --cached || git commit -m "Update music meta $(date +%Y-%m-%d)"
+          git push
