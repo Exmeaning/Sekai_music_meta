@@ -50,7 +50,7 @@ def calculate_scores(music_metas: List[Dict]) -> List[Dict]:
     
     POWER = 250000
     SOLO_SKILLS = [1.20, 1.00, 1.00, 1.00, 1.00]
-    AUTO_SKILLS = [1.00, 1.00, 1.00, 1.00, 1.00]  # AUTO 全100%
+    AUTO_SKILLS = [1.20, 1.00, 1.00, 1.00, 1.00] 
     MULTI_SKILLS = [2.00, 2.00, 2.00, 2.00, 2.00]
     
     results = []
@@ -72,7 +72,7 @@ def calculate_scores(music_metas: List[Dict]) -> List[Dict]:
         solo_score_pct = base_score + solo_skill_contribution
         solo_score = int(POWER * solo_score_pct * 4)
         
-        # AUTO (全100%, 使用base_score_auto和skill_score_auto)
+        # AUTO (车头120%, 全100%)
         auto_skill_contribution = sum(skill_score_auto[i] * AUTO_SKILLS[i] for i in range(5))
         auto_skill_contribution += skill_score_auto[5] * AUTO_SKILLS[0]
         auto_score_pct = base_score_auto + auto_skill_contribution
