@@ -34,7 +34,7 @@ jobs:
           GH_TOKEN: ${{ secrets.IMAGE_HOSTING_TOKEN }}
         run: |
           mkdir -p hosting/musicmeta
-          cp output/music_metas.json hosting/musicmeta/
+          cp output/*.json hosting/musicmeta/
           cd hosting
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
